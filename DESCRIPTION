@@ -1,0 +1,19 @@
+Package: RBPInper
+Type: Package
+Title: RNA-binding protein interactions mapper. 
+Version: 0.1.5
+Author: Chinedu A. Anene, PhD
+Maintainer: Chinedu Anthony Anene <C.A.L.King@leedsbeckett.ac.uk>
+Description: RBPInper is a simple two-step method that extends the analysis of high-throughput RBP’s RNA binding activities. 
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    FMStable,
+    GenomicRanges,
+    rtracklayer,
+    dplyr,
+Remotes:
+biocViews: Software
+
+    
