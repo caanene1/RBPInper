@@ -4,7 +4,9 @@ RNA-binding protein interaction mapper
 # Overview
 RBPInper is a simple two-step method that extends the analysis of high-throughput RBP’s RNA binding activities. It runs on two input files, including a table of P-values with genes in rows and datasets in columns. The columns can include P-values of differential gene expression from RBP perturbations (knockdown, overexpression), signal enrichment from RBP immunoprecipitation (RIP-Seq, eCLIP, PAR-CLIP). The second input is a dataset annotation file that indicates the cell type grouping and the data experimental strategy. Depending on the project, the cell type grouping may also be used to specify many other groups such as cell or tissue lineages. Experimental strategies are automatically filtered to remove non-RNA strategies. The R implementation of the framework enables flexible inclusion of new integration methods and a set of optional parameters at run time. When available, the final output has two tables representing global and group-specific interactomes (see Materials and Methods).
 
-![workflow](https://user-images.githubusercontent.com/44468440/111687762-92e9e600-8822-11eb-8d59-38d08a95d115.png)
+![workflow](https://github.com/caanene1/RBPInper/blob/5e39afdf71e8fa5faa4515ddc0d245a44bd8f4f6/Workflow.jpg)
+
+
 
 This tool is built in R and uses FMStable, GenomicRanges, rtracklayer, dplyr
 These applications are automatical installed with RBPInper.
