@@ -69,12 +69,10 @@ RBPInper object
 
 
 # Input prebed()
-Bed files - List of bed file file paths, specified by ```bed```. The function can take a list or vector of bed file paths to increase speed.
+Bed files - List of bed file file paths, specified by ```bed``` , the function can take a list or vector of bed file paths to increase speed.
 
-GFF, GTF, GTF3 or GFF3 - Genome annotation file path, specified by ```gtf```. This file will be used to proccess all the bed files specified above.
+GFF, GTF, GTF3 or GFF3 - Genome annotation file path, specified by ```gtf``` , this file will be used to process all the bed files specified above.
 
-Expression Matrix - See ``-i``` description above.
-The p-value tables, specified by ```evi```,
 
 # Output prebed()
 Data frame of P-value evidence for each bed file.
