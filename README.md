@@ -44,11 +44,11 @@ This input can contain meta information but they must be non numeric.
 
 Information matrix - The dataset annotation table, specified by ```info```, where datasets in rows and annotations in column. The first two columns of this table should be ID and cell group. 
 
-| ID  | cell types |
+| ID  | cell groups |
 | --- | --- |
-| Foxp1 | HepG2 |
-| PD1  |  PM  |
-| CD8  |  HepG2  |
+| data1 | HepG2 |
+| data2  |  PM  |
+| data3  |  HepG2  |
 
 You can also supply other type of grouping instead of cell types.
 

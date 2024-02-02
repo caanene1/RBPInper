@@ -317,3 +317,26 @@ ggplot(bench, aes(x = Column, y = overlap, fill = group)) +
 
 ## Get aggreagte for reporting
 aggregate(overlap ~ Column, data = bench, FUN = mean)
+
+
+
+########
+# Automatic literature curation for SFPQ
+res_all_genes$Gene_Words <- apply(res_all_genes, 1, function(column) {
+  extract_genes(column["Title"], pt=c("/", "-", ":", "·", ",", '"'),
+                remove = c("RNA", "DNA", "SFPQ", "PSF", "3D"))
+})
+
+#creating a table with frequency of filtered words
+gene_table <- table(unlist(strsplit(res_all_genes$Gene_Words, split = " ")))
+unique_gene_table <- data.frame(symbol = names(gene_table), Freq = as.vector(gene_table))
+
+#_genes to ensemblID___====
+unique_gene_table$ensemblID <- mapIds(org.Hs.eg.db,
+                                      keys = unique_gene_table$symbol,
+                                      keytype = "SYMBOL",
+                                      column = "ENSEMBL")
+
+lit_genes <- unique_gene_table[!is.na(unique_gene_table$ensemblID),]
+
+write.csv(lit_genes, file="lit_extract_genes.csv", row.names = F)

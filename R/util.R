@@ -114,4 +114,3 @@ premac2bed <- function(fie, nam="fie.bed", soure=c("base", "encode")){
               col.names = FALSE,
               row.names = FALSE, quote = FALSE)
 }
-
