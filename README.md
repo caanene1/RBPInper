@@ -8,11 +8,11 @@ RBPInper is a simple two-step method that extends the analysis of high-throughpu
 
 
 
-This tool is built in R and uses FMStable, GenomicRanges, rtracklayer, dplyr
-These applications are automatical installed with RBPInper.
+This tool is built in R and uses FMStable, GenomicRanges, rtracklayer, dplyr. 
+These applications are automatic installed with RBPInper.
 
 # Installation and running the tool
-The best way to get RBPInper along with all the dependencies is to install the release from github at [github](https://github.com/AneneLab/RBPInper) with:
+The best way to get RBPInper along with all the dependencies is to install the release from [github](https://github.com/AneneLab/RBPInper) with:
 
 ``` r
 devtools::install_github('AneneLab/RBPInper')
@@ -78,7 +78,7 @@ GFF, GTF, GTF3 or GFF3 - Genome annotation file path, specified by ```gtf``` , t
 Data frame of P-value evidence for each bed file.
 
 # Extras
-R codes to reproduce the downstream analyses reported in the paper are inside the folder "inst/Manuscript". The file manuscript.R has everything code used in the manuscript.
+R codes and dataset to reproduce the downstream analyses reported in the paper are inside the folder "inst/data". The file manuscript.R has every code used in the manuscript.
 
 # Test Datasets
 Datasets to test the package and replicate the analysis in the manuscript are inside the folder "inst/data"
