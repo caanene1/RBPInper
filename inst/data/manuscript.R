@@ -47,10 +47,21 @@ resultDNA <- RBPInper::rbpinper.run(evi=predata, info = infoDNA)
 
 ## Get and count the interactors
 mergdf <- cbind(resultRNA@L1.result, resultRNA@L2.result)
-this <- names(mergdf)[1:6]
+mergls <- list()
+this <- names(mergdf)[c(1:6, 10)]
 for(i in this){
-  mergdf[i] <- ifelse(mergdf[[i]] <= 0.05, "Hit", "")
+  if(i == "call"){
+    lss <- mergdf[mergdf[[i]] %in% "Hit", ]
+    mergls[["Global"]] <- rownames(lss)
+
+  } else{
+    mergdf[i] <- ifelse(mergdf[[i]] <= 0.05, "Hit", "")
+    lss <- mergdf[mergdf[[i]] %in% "Hit", ]
+    mergls[[i]] <- rownames(lss)
+  }
 }
+
+## For bar plot
 mergdf <- mergdf[c(1:6, 10)]
 names(mergdf)[7] <- "Global"
 mergdf <- colSums(mergdf == "Hit")
@@ -59,8 +70,12 @@ barplot(mergdf, names.arg = colnames(df),
         main = "", cex.names = 0.7, las = 2,
         ylim = c(0, 10000),
         xlab = "Interactome", ylab = "Hit Count")
-#
-## Get target column
+
+## For upset plot
+BioML::p_upset(mergls, xlab="Interactor size",
+               ylab="Intersection Size")
+
+ioh## Get target column
 resultRNA <- resultRNA@L2.result
 resultDNA <- resultDNA@L2.result
 
@@ -133,6 +148,8 @@ write.csv(validate, file = "Validation_target_SFPQ_RNA.csv", row.names = F)
 U2OS <- read.csv("~/Documents/GitHub/RBPInper/inst/data/independent validation/GSM3104133_PARCLIP_U2OS.csv")
 HeLa <- read.csv("~/Documents/GitHub/RBPInper/inst/data/independent validation/GSM3104135_PARCLIP_HeLa.csv")
 
+
+### Compare to independent data
 movbase <- resultRNA[c(1, 2)]
 movbase$RBPInper <- "RBPInper"
 
@@ -264,6 +281,99 @@ predata3[is.na(predata3)] <- ""
 # save to file
 write.csv(predata3, file = "meta_results_indviduals.csv", row.names = F)
 ########### End of large supplementary table binding ###########################
+
+# Reviewer comment - pool the gene list and ontology
+## Pool of data in the input
+pool <- meta[1:11]
+pool$pool <- rowSums(pool[3:11] == "Hit")
+pool <- pool[pool$pool != 0, ]
+pool <- pool[1:2]
+pool$group <- "Union"
+
+## pool independent validation
+indep <- meta[c(1:2, 13:14)]
+indep$indep <- rowSums(indep[3:4] == "Hit")
+indep <- indep[indep$indep != 0, ]
+indep <- indep[1:2]
+indep$group <- "Validation"
+
+## RBPINper
+rbpinper <- meta[meta$global %in% "Hit",]
+rbpinper <- rbpinper[1:2]
+rbpinper$group <- "RBPInper"
+
+## Merge
+porb <- rbind(pool, rbpinper, indep)
+
+porb1 <- porb[porb$group %in% c("Union", "RBPInper"),]
+# Create the review table 1
+wideporb <- reshape2::dcast(porb1, gene_id + symbol ~ group,
+                            value.var = "group" )
+write.csv(wideporb, file = "comparison with pool.csv", row.names = F)
+
+
+## Do the gene ontology to compare the two sets
+ego <- compareCluster(symbol ~ group,
+                      data = porb1,
+                      universe      = predata$symbol,
+                      OrgDb         = org.Hs.eg.db,
+                      keyType       = "SYMBOL",
+                      fun = "enrichGO",
+                      ont           = "BP",
+                      pAdjustMethod = "BH",
+                      pvalueCutoff  = 0.01,
+                      qvalueCutoff  = 0.01,
+                      readable      = T)
+## Semitic analysis
+d <- godata('org.Hs.eg.db', ont="BP")
+ego2 <- pairwise_termsim(ego, method = "Wang", semData = d)
+
+##
+pp <- dotplot(ego2, showCategory = 16,
+              font.size = 6, includeAll = TRUE)
+pdf(file = "biological_enrichment.pdf", width = 4, height = 10)
+BioML::p_cluster(pp)
+dev.off()
+
+# Get and count he GO terms
+goterm <- ego2@compareClusterResult
+write.csv(goterm, file = "GO comparions to pool.csv", row.names = F)
+# Get the unique for closer look
+# Ask Joe to complete
+gotab <- as.data.frame(table(goterm$ID))
+table(gotab$Freq)
+gotab <- gotab[gotab$Freq == 1, ]
+goterm_unique <- goterm[goterm$ID %in% gotab$Var1, ]
+write.csv(goterm_unique,
+          file = "GO_annotate_unique.csv",
+          row.names = F)
+
+### Do unique genes instead
+dupl <- as.data.frame(table(porb1$gene_id))
+dupl <- dupl[dupl$Freq == 1, ]
+porb1 <- porb1[porb1$gene_id %in% dupl$Var1, ]
+write.csv(porb1,
+          file = "uniques.csv",
+          row.names = F)
+
+## Do the gene ontology on the unique
+ego <- compareCluster(symbol ~ group,
+                data = porb1,
+                universe      = meta$symbol,
+                OrgDb         = org.Hs.eg.db,
+                keyType       = "SYMBOL",
+                fun = "enrichGO",
+                ont           = "BP",
+                pAdjustMethod = "BH",
+                pvalueCutoff  = 0.01, # Checked 0.01
+                qvalueCutoff  = 0.01, # Checked 0.01
+                readable      = T)
+
+pp <- dotplot(res.sim, showCategory = 12,
+              font.size = 6, includeAll = TRUE)
+pdf(file = "biological_enrichment.pdf", width = 4, height = 6)
+BioML::p_cluster(pp)
+dev.off()
 
 
 ## Now compute hit overlap

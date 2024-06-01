@@ -8,7 +8,7 @@ Prepare bed file for RBPInper
 Annotate narrow peak bed files using gtf,gff,gff3 annotation file
 }
 \usage{
-prebed(bed, gtf, fTarget = "gene", islog10 = TRUE, mMerge = "Bonferroni")
+prebed(bed, gtf, fTarget = "gene", islog10 = TRUE, mMerge = "Bonferroni", use="RBPInper")
 }
 
 \arguments{
@@ -27,6 +27,10 @@ Is bed file p-value -log10 transformed, default TRUE. This should ideally be the
   \item{mMerge}{
 Method to merge peak p-values to gene p-values. Avilable methods include "Bonferroni" default, "Fisher", "Binomial" or "Harmonic mean". The defualt is the most robust for combining peak p-values due to dependency. The implimention of the fusion function allows for lower or upper case, short version and mispelling provided the first four letters are correct.
 }
+  \item{use}{
+Is the output intended for RBPInper workflow "RBPInper" default or other workflows "other".
+}
+
 }
 \details{
 This function can operate on any source of peak file provided the matching gtf is provided and the standard bed columns present.

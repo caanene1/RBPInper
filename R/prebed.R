@@ -13,6 +13,8 @@
 #'
 #' @param mMerge Method to merge peak P-values to gene p-values
 #'
+#' @param use Is the output intended for RBPInper workflow "RBPInper" default or other workflows "other"
+#'
 #' @return Data frame of summaries p-value
 #'
 #' @keywords RBPInper, bed annotate
@@ -21,7 +23,7 @@
 #'
 #' @export
 #'
-prebed <- function(bed, gtf, fTarget="gene", islog10=TRUE, mMerge="Bonferroni"){
+prebed <- function(bed, gtf, fTarget="gene", islog10=TRUE, mMerge="Bonferroni", use="RBPInper"){
   library(GenomicRanges)
 
  # Load gtf once for speed
@@ -98,7 +100,13 @@ prebed <- function(bed, gtf, fTarget="gene", islog10=TRUE, mMerge="Bonferroni"){
  # Next get the gene symbol column or anything else
  mda <- mcols(gtf)
  mda <- as.data.frame(mda)
- mda <- mda[mda$type == fTarget, ][c("gene_id", "gene_name")]
+
+ if(use == "RBPInper"){
+   print("This step is gettting gene_id and gene_name columns.")
+   print("If your gtf files is non standard, it will fail. Use option use=other")
+   mda <- mda[mda$type == fTarget, ][c("gene_id", "gene_name")]
+ }
+
  output <- merge(mda, output, by="gene_id")
 
  return(output)

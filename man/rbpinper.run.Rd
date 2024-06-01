@@ -36,6 +36,13 @@ Method for p-value merging at global level, default "fisher".
   \item{p}{
 P-value threshold for calls.
 }
+  \item{penalise}{
+Indicate if a method should be penalized. Sub-process for DE RNA-Seq.
+}
+  \item{method.col}{
+If penalise TRUE and pen given, then indicate the column in the info file that match pen.
+}
+
 }
 \details{
 RBPInper object with cell type level results and global results.
